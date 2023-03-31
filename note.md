@@ -235,3 +235,6 @@ console.log(read);
     ```
 
   * 
+
+
+#### this is the test for `git commit --amend`
