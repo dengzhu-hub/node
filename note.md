@@ -234,7 +234,73 @@ console.log(read);
       }
     ```
 
-  * 
+  * 安装slugify包
+  
+    * ```json
+      npm install slugify 
+          "slugify": "^1.6.6"
+      
+      ```
+  
+    * 
+  
 
+#### 使用npm run 脚本代替，包命令
 
-#### this is the test for `git commit --amend`
+```
+npm run start
+```
+
+![image-20230401093747927](https://makeforpicgo.oss-cn-chengdu.aliyuncs.com/study/202304010937011.png)
+
+* 关于包的引用
+
+  * ```javascript
+    const slugify = require('slugify');
+    ```
+
+* 对于package的相关操作
+
+* 包由三个数字组成 : "^1.6.6"
+
+* 最后一个数字代表补丁版本，第二个代表次要版本，第一个是主要，代表重大更改
+
+* 查看npm包哪些需要更新 npm outdated
+
+* 安装指定版本 npm install packagename@1.0.1  数字按需取
+
+* 如果你在原始版本上将^ 改为~就是过滤掉次要版本，就不会安装有次要版本的。
+
+* npm update packagename@1.0.2
+
+* 卸载包 npm uninstall package 
+
+  ### 细节
+
+  ##### 永远不要将node modules f分享出去
+
+  ​	![image-20230401101348833](https://makeforpicgo.oss-cn-chengdu.aliyuncs.com/study/202304011013899.png)
+
+  * 里面有成千上万个文件，只需要删除文件夹，然后别人只需要输入
+
+    * ```json
+      npm install
+      ```
+
+      即可自动安装所有依赖 
+
+  ​	
+
+  #### server htpp request
+  
+  ![image-20230404140505310](https://makeforpicgo.oss-cn-chengdu.aliyuncs.com/study/202304041405549.png)
+
+![image-20230404140925015](https://makeforpicgo.oss-cn-chengdu.aliyuncs.com/study/202304041409177.png)
+
+![image-20230404142003378](https://makeforpicgo.oss-cn-chengdu.aliyuncs.com/study/202304041420641.png)
+
+![](https://makeforpicgo.oss-cn-chengdu.aliyuncs.com/study/202304041510932.png)
+
+![image-20230404151355420](https://makeforpicgo.oss-cn-chengdu.aliyuncs.com/study/202304041513621.png)![image-20230404153818195](https://makeforpicgo.oss-cn-chengdu.aliyuncs.com/study/202304041538361.png)
+
+![image-20230404152239746](https://makeforpicgo.oss-cn-chengdu.aliyuncs.com/study/202304041522961.png)

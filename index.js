@@ -1,97 +1,118 @@
+// require
 const fs = require('fs');
 const http = require('http');
 const path = require('path');
 const url = require('url');
 const replaceTemplate = require('./modules/replaceTemplate');
+const slugify = require('slugify');
+console.log('hello');
+console.log('eee');
+console.log('hassad');
+
+// TODO
+
 const hostname = '127.0.0.1';
 const port = 3303;
-const template_overview = fs.readFileSync(`${__dirname}/templates/template-overview.html`, 'utf-8');
-const template_product = fs.readFileSync(`${__dirname}/templates/template-product.html`, 'utf-8');
-const template_card = fs.readFileSync(`${__dirname}/templates/template-card.html`, 'utf-8');
+const template_overview = fs.readFileSync(
+  `${__dirname}/templates/template-overview.html`,
+  'utf-8'
+);
+const template_product = fs.readFileSync(
+  `${__dirname}/templates/template-product.html`,
+  'utf-8'
+);
+const template_card = fs.readFileSync(
+  `${__dirname}/templates/template-card.html`,
+  'utf-8'
+);
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
 const dataObj = JSON.parse(data);
 
+console.log(
+  slugify('Fresh Avocados', {
+    lower: true,
+    replacement: '______',
+  })
+);
+const slugifys = dataObj.map(el => slugify(el.productName, {
+  lower: true,
+  replacement: '______',
+}));
+console.log(slugifys);
+
+
 const server = http.createServer((req, res) => {
-    // res.statusCode = 200;
-    // res.writeHead('content-type', 'text/html');
-    // res.setHeader()
-    // const pathName = req.url;
-    // console.log(req.url);
-   const {query, pathname} = url.parse(req.url, true);
-   console.log(pathname);
-   
- 
-   
-//    console.log(urlParse.query.id);
-   
-//    console.log(query, pathname);
-   
-    
-    
-    // overview
-    if (pathname === '/' || pathname === '/overview') {
+  // res.statusCode = 200;
+  // res.writeHead('content-type', 'text/html');
+  // res.setHeader()
+  // const pathName = req.url;
+  // console.log(req.url);
+  const { query, pathname } = url.parse(req.url, true);
+  console.log(pathname);
 
-        
-        // res.end("THIS IS THE OVERVIEW");
-        res.writeHead(200, {
-            'content-type': 'text/html',
-        })
-        const cardsHtml = dataObj.map(el => replaceTemplate(template_card, el)).join('');
-            const output = template_overview.replace('{%PRODUCT_CARDS%}', cardsHtml);
-            console.log(cardsHtml);
-            
-        // console.log(cardsHtml);       
-        res.end(output);
-    }
+  //    console.log(urlParse.query.id);
 
-        //product
-    else if (pathname === '/product'){
-        console.log(query);
-        
-        res.writeHead(200, {
-            'Content-type': 'text/html',
+  //    console.log(query, pathname);
 
-        })
-        const product = dataObj[query.id];
-        // console.log(product);
-        
-        const output = replaceTemplate(template_product, product);
+  // overview
+  if (pathname === '/' || pathname === '/overview') {
+    // res.end("THIS IS THE OVERVIEW");
+    res.writeHead(200, {
+      'content-type': 'text/html',
+    });
+    const cardsHtml = dataObj
+      .map((el) => replaceTemplate(template_card, el))
+      .join('');
+    const output = template_overview.replace('{%PRODUCT_CARDS%}', cardsHtml);
+    console.log(cardsHtml);
 
-        // console.log(query );
-        res.end(output);
-    }
+    // console.log(cardsHtml);
+    res.end(output);
+  }
 
+  //product
+  else if (pathname === '/product') {
+    console.log(query);
 
-            // API 
-    else if (pathname === '/api') {
-        res.writeHead(200, {
-            'Content-type': 'application/json'
-        })
-    }
+    res.writeHead(200, {
+      'Content-type': 'text/html',
+    });
+    const product = dataObj[query.id];
+    // console.log(product);
 
-            //not found
-    else {
-        res.writeHead(404, {
-            'Content-type': 'text/html',
-            'my-own-header': 'hello world',
-        });
-        res.end('<h1>404 not found page</h1>');}
-    
+    const output = replaceTemplate(template_product, product);
 
-    console.log(req.url);
-    
-    // console.log(req);
-    
-    // res.end("这世界也许没有你想的那么好，但是也不会有你那么差!");
+    // console.log(query );
+    res.end(output);
+  }
 
-})
+  // API
+  else if (pathname === '/api') {
+    res.writeHead(200, {
+      'Content-type': 'application/json',
+    });
+  }
+
+  //not found
+  else {
+    res.writeHead(404, {
+      'Content-type': 'text/html',
+      'my-own-header': 'hello world',
+    });
+    res.end('<h1>404 not found page</h1>');
+  }
+
+  console.log(req.url);
+
+  // console.log(req);
+
+  // res.end("这世界也许没有你想的那么好，但是也不会有你那么差!");
+});
 server.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}`);
-    
-})
+  console.log(`Server running at http://${hostname}:${port}`);
+});
 
-
-// read file 
+// read file
 // blocking synchronous
 /*
 const read = fs.readFileSync('./txt/read-this.txt', 'utf-8');
@@ -131,6 +152,3 @@ fs.readFile('./txt/start.tx', 'utf-8', (err, data1) => {
 
 console.log('will read file');
 */
-
-    
-
