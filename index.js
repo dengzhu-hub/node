@@ -137,7 +137,7 @@ fs.readFile('./txt/start.tx', 'utf-8', (err, data1) => {
         console.log(data2);
         fs.readFile('./txt/input.txt', 'utf-8', (err, data3) => {
             console.log(data3);
-            fs.writeFile('./txt/final.txt',`${data2}\n ${data3}`, 'utf-8', (err) => {
+            fs.writeFile('./txt/final.txt',`${data2}\n  ${data3}`, 'utf-8', (err) => {
                 console.log('written');
                 
             })
@@ -151,4 +151,6 @@ fs.readFile('./txt/start.tx', 'utf-8', (err, data1) => {
 })
 
 console.log('will read file');
+
+
 */
