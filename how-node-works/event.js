@@ -22,7 +22,7 @@ myEmitter.emit('myEvent', 'hello world');
 //////////////////////////////
 
 const server = http.createServer();
-server.on('request', (req, res) => {
+  server.on('request', (req, res) => {
   console.log('Request received');
   console.log(req.url);
   
@@ -38,6 +38,6 @@ server.on('close', () => {
   console.log('Server closed');
 });
 
-server.listen(9000, '127.0.0.1', () => {
+server.listen(900, '127.0.0.1', () => {
     console.log('Server listening on port 9000');
 })

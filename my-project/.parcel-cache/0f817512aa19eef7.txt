@@ -1,4 +1,4 @@
-4914
+4915
 71D:\Study\Git\nodejs\my-project\node_modules\@parcel\events\src\types.js133252422154441399 0
 61D:\Study\Git\nodejs\my-project\node_modules\commander\typings133252422153057061 1
 101D:\Study\Git\nodejs\my-project\node_modules\@parcel\package-manager\test\fixtures\packages\a\index.js133252422154890845 0
@@ -14,7 +14,7 @@
 85D:\Study\Git\nodejs\my-project\node_modules\electron-to-chromium\chromium-versions.js133252422135110199 0
 75D:\Study\Git\nodejs\my-project\node_modules\caniuse-lite\data\regions\KZ.js133252422143037373 0
 67D:\Study\Git\nodejs\my-project\node_modules\htmlnano\lib\helpers.js133252422139912499 0
-35D:\Study\Git\nodejs\my-project\dist133252425810608174 1
+35D:\Study\Git\nodejs\my-project\dist133549455058109665 1
 101D:\Study\Git\nodejs\my-project\node_modules\@parcel\runtime-js\src\helpers\browser\prefetch-loader.js133252422149881112 0
 92D:\Study\Git\nodejs\my-project\node_modules\@parcel\runtime-js\src\helpers\get-worker-url.js133252422149597199 0
 61D:\Study\Git\nodejs\my-project\node_modules\sass\sass.dart.js133252424353349860 0
@@ -23,7 +23,7 @@
 82D:\Study\Git\nodejs\my-project\node_modules\source-map\lib\source-map-generator.js133252422123814989 0
 91D:\Study\Git\nodejs\my-project\node_modules\@parcel\transformer-html\lib\HTMLTransformer.js133252422147431264 0
 48D:\Study\Git\nodejs\my-project\package-lock.json133252424354946943 0
-39D:\Study\Git\nodejs\my-project\src\scss133252425796963811 1
+39D:\Study\Git\nodejs\my-project\src\scss133252430040300245 1
 80D:\Study\Git\nodejs\my-project\node_modules\@parcel\package-manager\src\index.js133252422154760271 0
 72D:\Study\Git\nodejs\my-project\node_modules\svgo\plugins\cleanupAttrs.js133252422139750261 0
 105D:\Study\Git\nodejs\my-project\node_modules\@parcel\core\test\fixtures\invalid-target-source-not-file\src133252422156350352 1
@@ -55,14 +55,19 @@
 82D:\Study\Git\nodejs\my-project\node_modules\@jridgewell\trace-mapping\package.json133252422123336227 0
 64D:\Study\Git\nodejs\my-project\node_modules\term-size\index.d.ts133252422139627072 0
 71D:\Study\Git\nodejs\my-project\node_modules\node-addon-api\CHANGELOG.md133252422136707123 0
-45D:\Study\Git\nodejs\my-project\src\index.html133252423810979297 0
+45D:\Study\Git\nodejs\my-project\src\index.html133252429445833396 0
 82D:\Study\Git\nodejs\my-project\node_modules\lmdb\dependencies\lz4\lib\liblz4.pc.in133252422143155353 0
 77D:\Study\Git\nodejs\my-project\node_modules\css-tree\lib\lexer\match-graph.js133252422130856654 0
-51D:\Study\Git\nodejs\my-project\src\scss\styles.scss133252425529605824 0
+51D:\Study\Git\nodejs\my-project\src\scss\styles.scss133252430320868773 0
 74D:\Study\Git\nodejs\my-project\node_modules\source-map-js\lib\array-set.js133252424351371755 0
 58D:\Study\Git\nodejs\my-project\node_modules\is-binary-path133252424344643373 1
 71D:\Study\Git\nodejs\my-project\node_modules\lightningcss-win32-x64-msvc133252422132227144 1
 75D:\Study\Git\nodejs\my-project\node_modules\caniuse-lite\data\regions\IN.js133252422141833639 0
+113D:\Study\Git\nodejs\my-project\node_modules\@parcel\node-resolver-core\test\fixture\node_modules\foo\package.json133252422138492454 0
+61D:\Study\Git\nodejs\my-project\node_modules\nth-check\lib\esm133252422128662967 1
+55D:\Study\Git\nodejs\my-project\src\scss\_icon-list.scss133252430162926352 0
+91D:\Study\Git\nodejs\my-project\node_modules\@parcel\watcher\src\watchman\WatchmanBackend.hh133252422141011681 0
+71D:\Study\Git\nodejs\my-project\node_modules\htmlnano\lib\presets\max.js133252422140031534 0
 52D:\Study\Git\nodejs\my-project\node_modules\entities133252422129964675 1
 63D:\Study\Git\nodejs\my-project\node_modules\posthtml\lib\api.js133252422140465505 0
 79D:\Study\Git\nodejs\my-project\node_modules\css-tree\lib\syntax\config\lexer.js133252422130829302 0
@@ -78,7 +83,7 @@
 78D:\Study\Git\nodejs\my-project\node_modules\css-what\lib\commonjs\stringify.js133252422128401459 0
 70D:\Study\Git\nodejs\my-project\node_modules\node-releases\package.json133252422123376282 0
 95D:\Study\Git\nodejs\my-project\node_modules\caniuse-lite\data\features\native-filesystem-api.js133252422145032280 0
-45D:\Study\Git\nodejs\my-project\src\js\main.js133252425463761415 0
+45D:\Study\Git\nodejs\my-project\src\js\main.js133252429765479550 0
 83D:\Study\Git\nodejs\my-project\node_modules\json-parse-even-better-errors\README.md133252422123479395 0
 57D:\Study\Git\nodejs\my-project\node_modules\dotenv-expand133252422142528878 1
 89D:\Study\Git\nodejs\my-project\node_modules\caniuse-lite\data\features\iframe-seamless.js133252422141588030 0
@@ -465,7 +470,6 @@
 60D:\Study\Git\nodejs\my-project\node_modules\dotenv\README.md133252422142849792 0
 90D:\Study\Git\nodejs\my-project\node_modules\caniuse-lite\data\features\array-find-index.js133252422133843869 0
 52D:\Study\Git\nodejs\my-project\node_modules\posthtml133252422140615503 1
-70D:\Study\Git\nodejs\my-project\node_modules\@parcel\optimizer-svgo\src133252422151266723 1
 59D:\Study\Git\nodejs\my-project\node_modules\posthtml-render133252422136750979 1
 63D:\Study\Git\nodejs\my-project\node_modules\buffer-from\LICENSE133252422122971547 0
 71D:\Study\Git\nodejs\my-project\node_modules\@parcel\transformer-postcss133252422146420605 1
@@ -753,7 +757,7 @@
 71D:\Study\Git\nodejs\my-project\node_modules\@parcel\fs\lib\index.js.map133252422154698969 0
 86D:\Study\Git\nodejs\my-project\node_modules\bootstrap\scss\mixins\_table-variants.scss133252422335641166 0
 70D:\Study\Git\nodejs\my-project\node_modules\yaml\browser\dist\index.js133252422133104487 0
-53D:\Study\Git\nodejs\my-project\dist\index.18dbc454.js133252425810547264 0
+53D:\Study\Git\nodejs\my-project\dist\index.18dbc454.js133549455056498503 0
 61D:\Study\Git\nodejs\my-project\node_modules\parcel\src\cli.js133252422154623348 0
 74D:\Study\Git\nodejs\my-project\node_modules\css-what\lib\commonjs\index.js133252422128311989 0
 73D:\Study\Git\nodejs\my-project\node_modules\@popperjs\core\dist\esm\utils133252422331268067 1
@@ -1242,7 +1246,7 @@
 86D:\Study\Git\nodejs\my-project\node_modules\@popperjs\core\dist\esm\utils\userAgent.js133252422331246047 0
 67D:\Study\Git\nodejs\my-project\node_modules\browserslist\browser.js133252422123178047 0
 81D:\Study\Git\nodejs\my-project\node_modules\bootstrap\scss\mixins\_container.scss133252422335215305 0
-57D:\Study\Git\nodejs\my-project\dist\index.18dbc454.js.map133252425810588169 0
+57D:\Study\Git\nodejs\my-project\dist\index.18dbc454.js.map133549455056554305 0
 75D:\Study\Git\nodejs\my-project\node_modules\caniuse-lite\data\regions\LS.js133252422143654180 0
 71D:\Study\Git\nodejs\my-project\node_modules\svgo\plugins\mergeStyles.js133252422140794552 0
 67D:\Study\Git\nodejs\my-project\node_modules\sass\types\options.d.ts133252424354242490 0
@@ -1250,11 +1254,11 @@
 75D:\Study\Git\nodejs\my-project\node_modules\caniuse-lite\data\regions\GY.js133252422141108874 0
 81D:\Study\Git\nodejs\my-project\node_modules\svgo\plugins\moveGroupAttrsToElems.js133252422140872590 0
 92D:\Study\Git\nodejs\my-project\node_modules\@popperjs\core\lib\modifiers\eventListeners.d.ts133252422330024142 0
+72D:\Study\Git\nodejs\my-project\node_modules\@jridgewell\resolve-uri\dist133252422123695690 1
+95D:\Study\Git\nodejs\my-project\node_modules\lmdb\dependencies\lmdb\libraries\liblmdb\mdb_drop.1133252422140825906 0
 87D:\Study\Git\nodejs\my-project\node_modules\@parcel\transformer-js\lib\JSTransformer.js133252422146929954 0
 67D:\Study\Git\nodejs\my-project\node_modules\parse-json\package.json133252422123286005 0
 94D:\Study\Git\nodejs\my-project\node_modules\caniuse-lite\data\features\js-regexp-lookbehind.js133252422142669894 0
-72D:\Study\Git\nodejs\my-project\node_modules\@jridgewell\resolve-uri\dist133252422123695690 1
-95D:\Study\Git\nodejs\my-project\node_modules\lmdb\dependencies\lmdb\libraries\liblmdb\mdb_drop.1133252422140825906 0
 116D:\Study\Git\nodejs\my-project\node_modules\@parcel\source-map\parcel_sourcemap_node\artifacts\index.darwin-x64.node133252422144715902 0
 67D:\Study\Git\nodejs\my-project\node_modules\svgo\plugins\plugins.js133252422140969221 0
 62D:\Study\Git\nodejs\my-project\node_modules\acorn\CHANGELOG.md133252422123772109 0
@@ -1706,8 +1710,6 @@
 66D:\Study\Git\nodejs\my-project\node_modules\@lezer\lr\package.json133252422140635507 0
 74D:\Study\Git\nodejs\my-project\node_modules\nth-check\lib\compile.d.ts.map133252422128421425 0
 72D:\Study\Git\nodejs\my-project\node_modules\nth-check\lib\compile.js.map133252422128457371 0
-113D:\Study\Git\nodejs\my-project\node_modules\@parcel\node-resolver-core\test\fixture\node_modules\foo\package.json133252422138492454 0
-61D:\Study\Git\nodejs\my-project\node_modules\nth-check\lib\esm133252422128662967 1
 113D:\Study\Git\nodejs\my-project\node_modules\msgpackr-extract\node_modules\node-gyp-build-optional-packages\bin.js133252422156840172 0
 82D:\Study\Git\nodejs\my-project\node_modules\@parcel\transformer-babel\package.json133252422147157052 0
 70D:\Study\Git\nodejs\my-project\node_modules\nth-check\lib\index.js.map133252422128509543 0
@@ -2234,8 +2236,6 @@
 78D:\Study\Git\nodejs\my-project\node_modules\bootstrap\dist\js\bootstrap.js.map133252422334366243 0
 95D:\Study\Git\nodejs\my-project\node_modules\@babel\highlight\node_modules\color-name\.npmignore133252422123178047 0
 75D:\Study\Git\nodejs\my-project\node_modules\htmlnano\lib\presets\ampSafe.js133252422139595335 0
-91D:\Study\Git\nodejs\my-project\node_modules\@parcel\watcher\src\watchman\WatchmanBackend.hh133252422141011681 0
-71D:\Study\Git\nodejs\my-project\node_modules\htmlnano\lib\presets\max.js133252422140031534 0
 91D:\Study\Git\nodejs\my-project\node_modules\@parcel\core\test\fixtures\plugins\node_modules133252422156410356 1
 72D:\Study\Git\nodejs\my-project\node_modules\htmlnano\lib\presets\safe.js133252422140705493 0
 80D:\Study\Git\nodejs\my-project\node_modules\bootstrap\dist\css\bootstrap.rtl.css133252422332459368 0
@@ -2730,7 +2730,7 @@
 84D:\Study\Git\nodejs\my-project\node_modules\@jridgewell\sourcemap-codec\package.json133252422123306141 0
 80D:\Study\Git\nodejs\my-project\node_modules\css-tree\lib\syntax\config\walker.js133252422131416261 0
 83D:\Study\Git\nodejs\my-project\node_modules\css-tree\lib\syntax\atrule\font-face.js133252422130536885 0
-58D:\Study\Git\nodejs\my-project\dist\index.044e704e.css.map133252425809287239 0
+58D:\Study\Git\nodejs\my-project\dist\index.044e704e.css.map133549455055453225 0
 85D:\Study\Git\nodejs\my-project\node_modules\@parcel\core\test\fixtures\common-targets133252422158029445 1
 79D:\Study\Git\nodejs\my-project\node_modules\css-tree\lib\syntax\atrule\index.js133252422130749177 0
 87D:\Study\Git\nodejs\my-project\node_modules\caniuse-lite\data\features\iframe-srcdoc.js133252422141610928 0
@@ -3640,7 +3640,7 @@
 69D:\Study\Git\nodejs\my-project\node_modules\@parcel\fs-search\LICENSE133252422139750261 0
 77D:\Study\Git\nodejs\my-project\node_modules\bootstrap\scss\mixins\_image.scss133252422335375671 0
 82D:\Study\Git\nodejs\my-project\node_modules\bootstrap\scss\mixins\_pagination.scss133252422335511167 0
-54D:\Study\Git\nodejs\my-project\dist\index.044e704e.css133252425809190915 0
+54D:\Study\Git\nodejs\my-project\dist\index.044e704e.css133549455055346766 0
 82D:\Study\Git\nodejs\my-project\node_modules\bootstrap\scss\mixins\_reset-text.scss133252422335571170 0
 94D:\Study\Git\nodejs\my-project\node_modules\@parcel\reporter-dev-server\src\templates\500.html133252422153735446 0
 85D:\Study\Git\nodejs\my-project\node_modules\bootstrap\scss\mixins\_text-truncate.scss133252422335661226 0
@@ -3853,7 +3853,7 @@
 81D:\Study\Git\nodejs\my-project\node_modules\@swc\helpers\src\_new_arrow_check.mjs133252422139101963 0
 100D:\Study\Git\nodejs\my-project\node_modules\@popperjs\core\dist\esm\dom-utils\getWindowScrollBarX.js133252422330938060 0
 83D:\Study\Git\nodejs\my-project\node_modules\@swc\helpers\src\_non_iterable_rest.mjs133252422139111969 0
-46D:\Study\Git\nodejs\my-project\dist\index.html133252425809593537 0
+46D:\Study\Git\nodejs\my-project\dist\index.html133549455058087271 0
 85D:\Study\Git\nodejs\my-project\node_modules\@swc\helpers\src\_object_spread_props.mjs133252422139170087 0
 91D:\Study\Git\nodejs\my-project\node_modules\@swc\helpers\src\_object_without_properties.mjs133252422139181872 0
 97D:\Study\Git\nodejs\my-project\node_modules\@swc\helpers\src\_object_without_properties_loose.mjs133252422139204962 0
@@ -4412,6 +4412,7 @@
 91D:\Study\Git\nodejs\my-project\node_modules\@parcel\optimizer-terser\lib\TerserOptimizer.js133252422150470552 0
 74D:\Study\Git\nodejs\my-project\node_modules\@parcel\optimizer-svgo\LICENSE133252422151244229 0
 79D:\Study\Git\nodejs\my-project\node_modules\@parcel\optimizer-svgo\package.json133252422151287156 0
+70D:\Study\Git\nodejs\my-project\node_modules\@parcel\optimizer-svgo\src133252422151266723 1
 82D:\Study\Git\nodejs\my-project\node_modules\@parcel\core\test\fixtures\module-a.js133252422156870737 0
 87D:\Study\Git\nodejs\my-project\node_modules\@parcel\optimizer-svgo\src\SVGOOptimizer.js133252422151277091 0
 77D:\Study\Git\nodejs\my-project\node_modules\@parcel\optimizer-image\native.js133252422150571419 0

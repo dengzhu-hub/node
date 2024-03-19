@@ -19,7 +19,6 @@ exports.checkBody = (req, res, next) => {
       message: 'missing name or price',
     });
   }
-
   next();
 };
 

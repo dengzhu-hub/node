@@ -1195,6 +1195,8 @@ MVC的目标是将应用程序的逻辑和数据分离，使其更易于维护�
 
   * 让他变得更好 app.route()
 
+    我们可以使用app.route()来调用多个请求method 这样就很方便了
+    
     * ```javascript
       app.route('/api/v1/tours').get(getAllTours).post(createTour);
       app
@@ -1207,6 +1209,8 @@ MVC的目标是将应用程序的逻辑和数据分离，使其更易于维护�
 
 
 ### middleware
+
+everything is middleware
 
 Express 是一个路由和中间件 Web 框架，它自己的功能很少：Express 应用程序本质上是一系列中间件函数调用。
 
@@ -1229,11 +1233,13 @@ Express 应用程序可以使用以下类型的中间件：
 - [内置中间件](https://expressjs.com/en/guide/using-middleware.html#middleware.built-in)
 - [第三方中间件](https://expressjs.com/en/guide/using-middleware.html#middleware.third-party)
 
+![image-20231123114548469](https://makeforpicgo.oss-cn-chengdu.aliyuncs.com/study/202311231145158.png)
+
 您可以使用可选的安装路径加载应用程序级和路由器级中间件。您还可以一起加载一系列中间件功能，这会在挂载点创建中间件系统的子堆栈。
 
 * eg
 
-  * ```
+  * ```javascript
     app.use('/api/v1/tours/:id', (req, res, next) => {
       console.log('hello form here!');
       next();
@@ -1259,12 +1265,58 @@ Express 应用程序可以使用以下类型的中间件：
     // 我因为失误，没有写next(),所以当我调用get()时，我的程序一直运行不出来，是因为程序没有next()就会被一直挂着
     ```
 
+  * 为了测试我注释掉了next(),他就一直处于sending request状态
+
+  * ```javascript
+    app.use((req, res, next) => {
+      console.log('my name is middleware');
+      // next();
+    });
+    ```
+    
+  * ![image-20231123115441467](https://makeforpicgo.oss-cn-chengdu.aliyuncs.com/study/202311231154845.png)
+
   * 成功调用
 
     
 
     * 
     * ![image-20230502143252581](https://makeforpicgo.oss-cn-chengdu.aliyuncs.com/study/202305021432633.png)
+
+* 我们也可以定义自己全局变量在middleware中
+
+* ```javascript
+
+  app.use((req, res, next) => {
+    req.requestTime = new Date().toISOString();
+    next();
+  });
+  ```
+
+* 然后在需要的地方使用 至需要调用 req.就可以了，并且是全局的
+
+* ```javascript
+  const getTourById = (req, res) => {
+    // 根据请求路径中的id获取旅游信息
+    const { id } = req.params;
+    const requestAt = req.requestTime;
+    // 如果id在tours数组中找到对应的旅游信息
+    if (tours.find((tour) => tour.id === Number(id))) {
+      // 返回成功响应并返回相应的数据
+      res.status(200).json({
+        status: 'success',
+        requestAt,
+        data: {
+          tour: tours.find((tour) => tour.id === Number(id)),
+        },
+        createAt: new Date(),
+      });
+    } else {
+  ```
+
+* 这样确实很方便
+
+* ![image-20231123120615339](https://makeforpicgo.oss-cn-chengdu.aliyuncs.com/study/202311231206466.png)
 
 * morgan一个很好的logger
 
@@ -1498,6 +1550,10 @@ app.use(express.static(`${__dirname}/public`));
 
 ![image-20230519113257899](https://makeforpicgo.oss-cn-chengdu.aliyuncs.com/study/202305191132048.png)
 
+我们可以使用app.get('env') 访问我们的环境是什么
+
+![image-20231124090442026](https://makeforpicgo.oss-cn-chengdu.aliyuncs.com/study/202311240904275.png)
+
 配置nodejs的环境变量
 
 * 在根目录下创建config.env 文件
@@ -1569,6 +1625,10 @@ npm i eslint prettier eslint-config-prettier eslint-plugin-prettier eslint-confi
   }
 ```
 
+
+
+![image-20231124102134628](https://makeforpicgo.oss-cn-chengdu.aliyuncs.com/study/202311241021431.png)
+
 # MongoDB
 
 ![IMG_1378](https://makeforpicgo.oss-cn-chengdu.aliyuncs.com/study/202305191448974.PNG)
@@ -1584,6 +1644,8 @@ MongoDB是一种开源的NoSQL数据库管理系统，它使用文档模型来�
 7. 多功能性：除了基本的数据存储和查询功能外，MongoDB还提供了其他高级功能。它支持索引、事务、复制、故障恢复、地理空间索引和查询、全文搜索等。这些功能使得MongoDB可以满足各种应用程序的需求。
 
 总之，MongoDB是一种灵活、可扩展和高性能的NoSQL数据库系统，适用于存储和处理各种类型的数据。
+
+![image-20231124102123042](https://makeforpicgo.oss-cn-chengdu.aliyuncs.com/study/202311241021321.png)
 
 以下是一些MongoDB的语句案例：
 
@@ -1708,6 +1770,8 @@ MongoDB是一种开源的NoSQL数据库管理系统，它使用文档模型来�
     ```
 
   * ```Json
+    OR
+    
     natours-test> db.tours.find({$or: [{price: {$lt: 500}}, {rating: {$gt:5.4}}]})
     [
       {
@@ -1730,8 +1794,17 @@ MongoDB是一种开源的NoSQL数据库管理系统，它使用文档模型来�
         difficulty: 'easy'
       }
     ]
+    
+    
+    只输出一条数据 
+    natours-test> db.test_natours.find({$or:[{price:{$gte:700}}, {rating:{$eq:19}}]}, {price:1})
+    [
+      { _id: ObjectId("6560124a98009364121dd642"), price: 988 },
+      { _id: ObjectId("656012d198009364121dd643"), price: 876 },
+      { _id: ObjectId("656012d198009364121dd644"), price: 4344 }
+    ]
     ```
-
+    
   * ```Json
     natours-test> db.tours.find({$and: [{price: {$lt: 500}}, {rating: {$gt:5.4}}]})
     [
@@ -1743,7 +1816,7 @@ MongoDB是一种开源的NoSQL数据库管理系统，它使用文档模型来�
       }
     ]
     ```
-
+  
   * use name
   
   * ```json
@@ -1790,10 +1863,14 @@ natours-test> db.tours.deleteOne({name:"The Summer Sea"})
 
 #### app 使用mongodb
 
+![image-20240317160031767](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240317160031767.png)
+
 ```javascript
 npm i mongoose 
 
 DATABASE=mongodb+srv://jonas:<password>@cluster0.o9dsiml.mongodb.net/natours?retryWrites=true&w=majority
+
+
 ```
 
 ```javascript
@@ -1829,3 +1906,28 @@ const tourSchema = new mongoose.Schema({
 });
 ```
 
+![image-20240318193126273](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240318193126273.png)
+
+[关注点分离](https://www.geeksforgeeks.org/mvc-framework-introduction/)
+
+
+MVC 架构是一种常用的软件架构模式，用于组织和管理应用程序的代码。它将应用程序分为三个核心组件：
+
+1. **Model（模型）**：
+   - 模型代表应用程序的数据和业务逻辑。
+   - 负责管理应用程序的数据状态，处理数据的读取、更新和删除操作。
+   - 定义了应用程序的业务规则和逻辑。
+2. **View（视图）**：
+   - 视图是用户界面的表示层。
+   - 负责展示模型的数据给用户，并接受用户的输入。
+   - 通常是用户与应用程序交互的界面，负责呈现数据给用户，并接受用户的操作和输入。
+3. **Controller（控制器）**：
+   - 控制器是模型和视图之间的中间人。
+   - 负责处理用户的请求，并相应地更新模型或视图。
+     - 接收用户的输入，根据用户的请求调用相应的模型逻辑来处理数据，并将处理结果传递给视图进行展示。
+
+![image-20240318194738943](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240318194738943.png)
+
+![image-20240318195541827](C:\Users\jackdeng\AppData\Roaming\Typora\typora-user-images\image-20240318195541827.png)
+
+![image-20240319135328438](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240319135328438.png)
