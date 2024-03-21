@@ -1931,3 +1931,294 @@ MVC 架构是一种常用的软件架构模式，用于组织和管理应用程�
 ![image-20240318195541827](C:\Users\jackdeng\AppData\Roaming\Typora\typora-user-images\image-20240318195541827.png)
 
 ![image-20240319135328438](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240319135328438.png)
+
+![image-20240319181817743](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240319181817743.png)
+
+use mongoose create data
+
+```javascript
+const createTour = async (req, res) => {
+  // const tourData = new Tour({})
+  // tourData.save()
+  try {
+    const newTour = await Tour.create(req.body);
+    res.set({
+      'Contnet-Length': '1337',
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-cache',
+      'Access-Control-Allow-Origin': '*',
+    });
+   res.cookie('access_token', 'Bearer ' , {
+      expires: new Date(Date.now() + 8 * 3600000) // cookie will be removed after 8 hours
+    })
+    .cookie('test', 'test')
+    res.status(201).json({
+      status: 'success',
+      data: {
+        tours: newTour,
+      },
+      createAt: new Date(),
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
+};
+```
+#### getTours
+```javascript
+const getAllTours = async (req, res) => {
+  try {
+    const tours = await Tour.find({});
+    res.set({
+      'X-My-Private-Info': 'jonasid',
+      'X-My-Private-Info2': 'dengzhu-hub',
+    });
+    res.status(200).json({
+      status: 'success', // 响应状态为成功
+      result: tours.length, // 返回旅游信息的数量
+      data: {
+        tours, // 旅游信息
+      },
+      createAt: new Date(), // 创建时间为当前时间
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(404).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
+};
+```
+```javascript
+
+const getTourById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const requestAt = req.requestTime;
+    // 如果id在tours数组中找到对应的旅游信息
+
+    const tour = await Tour.findById(id).exec();
+    // const tour = await Tour.findOne({"_id": id})
+    console.log(tour);
+
+    // 返回成功响应并返回相应的数据
+    res.status(200).json({
+      status: 'success',
+      requestAt,
+      data: {
+        tour,
+      },
+      createAt: new Date(),
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
+  // 根据请求路径中的id获取旅游信息
+
+  // 返回404错误并发送错误图片
+};
+```
+```javascript
+const updateTour = async (req, res) => {
+  try{
+    const tourId = req.params.id; // 从 URL 参数获取要更新的旅游信息的 ID
+    const tour = await Tour.findByIdAndUpdate(tourId, req.body, {
+      new: true,   //返回新的文档
+      runValidators: true,  // 要求验证
+    })
+    res.status(200).json({
+      status:'success',
+      data: {
+        tour,
+      },
+      createAt: new Date(),
+    })
+
+  }catch (err) {
+    res.status(404).json({
+      "status": "更新失败",
+      "message": err.message,
+      
+    })
+
+  }
+};```
+
+```
+
+更新失败，类型不对rating
+
+![image-20240320094520236](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240320094520236.png)
+
+![image-20240320094603270](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240320094603270.png)
+
+### 全部导入或删除
+
+```javascript
+const mongoose = require('mongoose');
+const path = require('path');
+const fs = require('fs');
+const Tour = require('../../models/tourModels');
+require('dotenv').config({ path: './../../.config.env' });
+console.log(__dirname);
+console.log(__filename);
+const db = process.env.DATABASE?.replace('<PASSWORD>', process.env.PASSWORD);
+console.log(db);
+mongoose.connect(db, {}).then((con) => {
+  // console.log(con.connections)
+  console.log('Connected to MongoDB');
+});
+const currentFile = 'tours-simple.json';
+const tours = JSON.parse(fs.readFileSync(path.join(__dirname, currentFile), 'utf-8'));
+console.log(tours);
+
+const importDataToDb = async () => {
+  try {
+    await Tour.create(tours);
+    console.log('Data imported successfully');
+
+
+  } catch (err) {
+    console.log(err);
+  }
+
+};
+const deleteDataFromDb = async () => {
+  try {
+    await Tour.deleteMany({});
+    console.log('Data deleted successfully');
+
+
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+
+if (process.argv[2] === '--import') {
+  importDataToDb().then(r => console.log(r));
+}else if (process.argv[2] === '--delete') {
+  deleteDataFromDb().then(r => console.log(r));
+}
+console.log(process.argv);
+```
+
+![image-20240320171151798](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240320171151798.png)
+
+process.argv 非常好用的一个属性
+
+```JavaScript
+const args = process.argv.slice(2)
+if (args[0] === '--import') {
+  importDataToDb()
+
+}else if (args[0] === '--delete') {
+  deleteDataFromDb()
+
+}
+```
+
+query string
+
+```javascript
+    const excludeQuery = ['page','limit','sort','fields'] //排除数组里的参数
+    excludeQuery.forEach(el => delete queryObj[el])
+    console.log(queryObj)
+    // const tours = await Tour.find({});
+    const queryStr = JSON.stringify(queryObj)
+```
+
+![image-20240321100652685](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240321100652685.png)
+
+特定搜索?price[lt]=1200 让他匹配我们mongodb操作符
+
+```json
+ // { difficulty: 'easy', duration: { gte: '5' } }
+    // { difficulty: 'easy', duration: { $gte: '5' } }
+```
+
+![image-20240321100801974](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240321100801974.png)
+
+```javascript
+    const queryStr = JSON.stringify(queryObj)
+    const replaceQuery = JSON.parse(queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`))
+    console.log(replaceQuery);
+```
+
+符合预期
+
+![image-20240321100914999](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240321100914999.png)
+
+* full code
+
+* > ```javascript
+  >     const queryObj = { ...req.query}
+  >     const excludeQuery = ['page','limit','sort','fields']
+  >     excludeQuery.forEach(el => delete queryObj[el])
+  >     console.log(queryObj)
+  >     // const tours = await Tour.find({});
+  >     const queryStr = JSON.stringify(queryObj)
+  >     const replaceQuery = JSON.parse(queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`))
+  >     console.log(replaceQuery);
+  > 
+  >     // BUILD QUERY
+  >     const query =  Tour.find(replaceQuery)
+  > 
+  >     // { difficulty: 'easy', duration: { gte: '5' } }
+  >     // { difficulty: 'easy', duration: { $gte: '5' } }
+  > 
+  >     // FILTER QUERY 
+  >     const tours = await query;
+  > 
+  > 
+  > ```
+
+* sort
+
+  > ```javascript
+  >  if (queryKey) {
+  >       const sortBy = queryKey.split(',').join(' ');
+  >       console.log(sortBy);
+  > 
+  >       query = query.sort(sortBy);
+  >     } else  {
+  >       query = query.sort('-createdAt');
+  >     }
+  > ```
+
+* fields
+
+  > ```json
+  > http://localhost:9999/api/v1/tours?fields=name,duration,price,difficulty
+  > ```
+  >
+  > ```js
+  >     createdAt: {
+  >       type: Date,
+  >       default: Date.now(),
+  >       select: false,   //设置为false，当查询时就不包括这个
+  >     },
+  > ```
+  >
+  > ```js
+  >     if (queryField) {
+  >       const fieldBy = queryField.split(',').join(' ');
+  >       query = query.select(fieldBy)
+  >     }else {
+  >       query = query.select('-__v');   // “-”就是不包括 "__v"
+  >     }
+  > ```
+  >
+  > 效果:
+  >
+  > ![image-20240321125442900](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240321125442900.png)

@@ -1,8 +1,17 @@
 const fs = require('fs');
+const Tour = require('../models/tourModels');
 
 const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
+  fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`),
 );
+
+class ApiFeature {
+  constructor(query, queryStr) {
+    this.query = query;
+    this.queryStr = queryStr;
+
+  }
+}
 
 const checkBody = (req, res, next) => {
   if (!req.body.name || !req.body.price) {
@@ -13,111 +22,197 @@ const checkBody = (req, res, next) => {
   }
   next();
 };
-const getAllTours = (req, res) => {
-  // 获取所有旅游信息并返回成功响应
-  res.status(200).json({
-    status: 'success', // 响应状态为成功
-    result: tours.length, // 返回旅游信息的数量
-    data: {
-      tours, // 旅游信息
-    },
-    createAt: new Date(), // 创建时间为当前时间
-  });
+
+const getTop5CheapTours = (req, res, next) => {
+  req.query.limit = '5';
+  req.query.sort = '-ratingsAverage,price';
+  req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
+  next();
 };
-const getTourById = (req, res) => {
-  // 根据请求路径中的id获取旅游信息
-  const { id } = req.params;
-  const requestAt = req.requestTime;
-  // 如果id在tours数组中找到对应的旅游信息
-  if (tours.find((tour) => tour.id === Number(id))) {
+
+const getAllTours = async (req, res) => {
+  try {
+    const queryObj = { ...req.query };
+    console.log(queryObj);
+    const excludeQuery = ['page', 'limit', 'sort', 'fields'];
+    excludeQuery.forEach((el) => delete queryObj[el]);
+    console.log(queryObj);
+    // const tours = await Tour.find({});
+    const queryStr = JSON.stringify(queryObj);
+    const replaceQuery = JSON.parse(
+      queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`),
+    );
+    console.log(replaceQuery);
+
+    // BUILD QUERY
+    let query = Tour.find(replaceQuery);
+
+    // { difficulty: 'easy', duration: { gte: '5' } }
+    // { difficulty: 'easy', duration: { $gte: '5' } }
+
+    //FILTER SORT
+    const queryKey = req.query.sort;
+    console.log(typeof queryKey);
+    if (queryKey) {
+      const sortBy = queryKey.split(',').join(' ');
+      console.log(sortBy);
+
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort('-createdAt');
+    }
+    // FILTER FIELDS
+    const queryField = req.query.fields;
+    if (queryField) {
+      const fieldBy = queryField.split(',').join(' ');
+      query = query.select(fieldBy);
+    } else {
+      query = query.select('-__v');
+    }
+
+    //FILTER PAGE && LIMIT
+
+    // page=2&limit=10 1-10 page 1, 11-20 page 2, 21-30 page3
+    // query = query.skip(10).limit(10)
+    // query = query.skip((page - 1) * limit).limit(limit)
+
+    const queryPage = req.query.page * 1 || 1;
+    const queryLimit = req.query.limit * 1 || 100;
+    const skip = (queryPage - 1) * queryLimit;
+    if (queryPage) {
+      const numTours = await Tour.countDocuments();
+      console.log(numTours, skip);
+      if (skip >= numTours) throw new Error('This page does not exist');
+      query = query.skip(skip).limit(queryLimit);
+      // console.log(query.query);
+    }
+    // EXECUTE QUERY
+    const tours = await query;
+
+    // const tours = await Tour.find()
+    //   .where('duration')
+    //   .equals(5)
+    //   .where('difficulty')
+    //   .equals('easy');
+    res.set({
+      'X-My-Private-Info': 'jonasid',
+      'X-My-Private-Info2': 'dengzhu-hub',
+    });
+    res.status(200).json({
+      status: 'success', // 响应状态为成功
+      result: tours.length, // 返回旅游信息的数量
+      data: {
+        tours, // 旅游信息
+      },
+      createAt: new Date(), // 创建时间为当前时间
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(404).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
+};
+const getTourById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const requestAt = req.requestTime;
+    // 如果id在tours数组中找到对应的旅游信息
+
+    const tour = await Tour.findById(id).exec();
+    // const tour = await Tour.findOne({"_id": id})
+    console.log(tour);
+
     // 返回成功响应并返回相应的数据
     res.status(200).json({
       status: 'success',
       requestAt,
       data: {
-        tour: tours.find((tour) => tour.id === Number(id)),
+        tour,
       },
       createAt: new Date(),
     });
-  } else {
-    // 返回404错误并发送错误图片
-    res
-      .status(404)
-      .sendFile(`${__dirname}/dev-data/img/Error-404-on-Opera.png`);
-  }
-};
-
-const updateTour = (req, res) => {
-  const tourId = parseInt(req.params.id); // 从 URL 参数获取要更新的旅游信息的 ID
-  const updatedInfo = req.body; // 从请求体获取要更新的信息
-  console.log(updatedInfo);
-
-  // 在 tours 数组中找到要更新的旅游信息对象
-  const tourToUpdate = tours.find((tour) => tour.id === tourId);
-  console.log(tourToUpdate);
-
-  if (!tourToUpdate) {
-    return res.status(404).json({ error: 'Tour not found' });
-  }
-
-  // 更新旅游信息对象的部分内容
-  for (let key in updatedInfo) {
-    if (key in tourToUpdate) {
-      tourToUpdate[key] = updatedInfo[key];
-    }
-  }
-
-  return res.json({ message: 'Tour updated successfully', tour: tourToUpdate });
-};
-
-const deleteTour = (req, res) => {
-  // 将请求参数中的id转换为整数
-  const id = parseInt(req.params.id);
-  // 查找要删除的tour的索引位置
-  const tourToDelete = tours.findIndex((tour) => tour.id === id);
-  console.log(tourToDelete);
-
-  // 如果tour不存在，则返回404错误
-  if (tourToDelete === -1) {
-    return res.status(404).json({
-      error: 'tour not found',
+  } catch (error) {
+    res.status(404).json({
+      status: 'error',
+      message: error.message,
     });
   }
-  // 从tours数组中删除指定的tour
-  tours.splice(tourToDelete, 1);
-  // 返回成功删除的响应
-  return res.status(204).json({
-    message: 'tour deleted successfully',
-  });
+  // 根据请求路径中的id获取旅游信息
+
+  // 返回404错误并发送错误图片
 };
-const createTour = (req, res) => {
-  // 根据已有tour的最新id，生成新的id
-  const newId = tours[tours.length - 1]?.id + 1;
-  // 创建一个新的tour对象，包含id和请求体中的属性
-  const newTour = {
-    id: newId,
-    ...req.body,
-  };
-  // 将新的tour对象添加到tours数组中
-  tours.push(newTour);
-  // 将tours数组转换为json字符串并写入文件
-  fs.writeFile(
-    `${__dirname}/dev-data/data/tours-simple.json`,
-    JSON.stringify(tours),
-    (err) => {
-      if (err) {
-        console.log(err);
-      }
-      // 返回成功响应，并包含tours数组、创建时间等信息
-      res.status(201).json({
-        status: 'success',
-        data: {
-          tours,
-        },
-        createAt: new Date(),
-      });
-    }
-  );
+
+const updateTour = async (req, res) => {
+  try {
+    const tourId = req.params.id; // 从 URL 参数获取要更新的旅游信息的 ID
+    const tour = await Tour.findByIdAndUpdate(tourId, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour,
+      },
+      createAt: new Date(),
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: '更新失败',
+      message: err.message,
+    });
+  }
+};
+
+const deleteTour = async (req, res) => {
+  try {
+    const tourId = req.params.id; // 从 URL 参数获取要更新的旅游信息的 ID
+    await Tour.findByIdAndDelete(tourId);
+
+    res.status(204).json({
+      status: 'success',
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: '删除失败',
+      message: err.message,
+    });
+  }
+};
+const createTour = async (req, res) => {
+  // const tourData = new Tour({})
+  // tourData.save()
+  try {
+    const newTour = await Tour.create(req.body);
+    res.set({
+      'Contnet-Length': '1337',
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-cache',
+      'Access-Control-Allow-Origin': '*',
+    });
+    res
+      .cookie('access_token', 'Bearer ', {
+        expires: new Date(Date.now() + 8 * 3600000), // cookie will be removed after 8 hours
+      })
+      .cookie('test', 'test');
+    res.status(201).json({
+      status: 'success',
+      data: {
+        tours: newTour,
+      },
+      createAt: new Date(),
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
 };
 module.exports = {
   getAllTours,
@@ -126,4 +221,5 @@ module.exports = {
   deleteTour,
   createTour,
   checkBody,
+  getTop5CheapTours,
 };
