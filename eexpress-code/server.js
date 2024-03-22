@@ -9,7 +9,7 @@ const dbHost = process.env.DB_HOST;
 console.log(dbHost); // 输出：localhost
 const user = process.env.USERNAME;
 console.log(user);
-const DB_HOST = process.env.DATABASE_LOCAL
+const DB_HOST = process.env.DATABASE_LOCAL;
 mongoose
   .connect(DB_HOST, {
     useNewUrlParser: true,
@@ -19,8 +19,9 @@ mongoose
   .then((con) => {
     console.log(con.connections);
     console.log('DB connection established');
-  }).catch(err => {
-    console.log("chucuo;e");
+  })
+  .catch((err) => {
+    console.log('chucuo;e');
   });
 
 //schema

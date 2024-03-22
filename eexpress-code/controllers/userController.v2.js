@@ -3,11 +3,11 @@ const path = require('path');
 const users = JSON.parse(
   fs.readFileSync(
     path.join(__dirname, '..', 'dev-data', 'data', 'users.json'),
-    'utf-8'
-  )
+    'utf-8',
+  ),
 );
 
-getAllUsers = (req, res) => {
+const getAllUsers = (req, res) => {
   res.status(200).json({
     status: 'success',
     result: users.length,
@@ -17,7 +17,7 @@ getAllUsers = (req, res) => {
     },
   });
 };
-createUser = (req, res) => {
+const createUser = (req, res) => {
   const newId = users[users.length - 1]?.id + 1;
   const newUser = {
     id: newId,
@@ -38,11 +38,11 @@ createUser = (req, res) => {
         },
         createAt: new Date(),
       });
-    }
+    },
   );
 };
-updateUser = (req, res) => {
-  const id = req.params.id;
+const updateUser = (req, res) => {
+  const { id } = req.params;
   console.log(req.params, id);
 
   const updateInfo = req.body;
@@ -51,6 +51,7 @@ updateUser = (req, res) => {
     return res.status(404).json({
       error: 'user not found',
     });
+
   for (let key in userToUpdate) {
     if (key in updateInfo) {
       userToUpdate[key] = updateInfo[key];

@@ -2222,3 +2222,367 @@ query string
   > 效果:
   >
   > ![image-20240321125442900](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240321125442900.png)
+
+* page && limit 
+
+  > ```js
+  >    const queryPage = req.query.page * 1 || 1;
+  >     const queryLimit = req.query.limit * 1 || 100;
+  >     const skip = (queryPage - 1) * queryLimit;
+  >     if (queryPage) {
+  >       const numTours = await Tour.countDocuments();
+  >       console.log(numTours, skip);
+  >       if (skip >= numTours) throw new Error('This page does not exist');
+  >       query = query.skip(skip).limit(queryLimit);
+  >       // console.log(query.query);
+  >     }
+  > ```
+  >
+  > ```js
+  > http://localhost:9999/api/v1/tours?page=10&limit=5
+  > ```
+  >
+  > 
+
+![image-20240321175312858](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240321175312858.png)
+
+定义中间件函数
+
+```js
+
+const getTop5CheapTours = (req, res, next) => {
+  req.query.limit = '5';
+  req.query.sort = '-ratingsAverage,price';
+  req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
+  next();
+};
+```
+
+full code
+
+```js
+const getAllTours = async (req, res) => {
+  try {
+    const queryObj = { ...req.query };
+    console.log(queryObj);
+    const excludeQuery = ['page', 'limit', 'sort', 'fields'];
+    excludeQuery.forEach((el) => delete queryObj[el]);
+    console.log(queryObj);
+    // const tours = await Tour.find({});
+    const queryStr = JSON.stringify(queryObj);
+    const replaceQuery = JSON.parse(
+      queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`),
+    );
+    console.log(replaceQuery);
+
+    // BUILD QUERY
+    let query = Tour.find(replaceQuery);
+
+    // { difficulty: 'easy', duration: { gte: '5' } }
+    // { difficulty: 'easy', duration: { $gte: '5' } }
+
+    //FILTER SORT
+    const queryKey = req.query.sort;
+    console.log(typeof queryKey);
+    if (queryKey) {
+      const sortBy = queryKey.split(',').join(' ');
+      console.log(sortBy);
+
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort('-createdAt');
+    }
+    // FILTER FIELDS
+    const queryField = req.query.fields;
+    if (queryField) {
+      const fieldBy = queryField.split(',').join(' ');
+      query = query.select(fieldBy);
+    } else {
+      query = query.select('-__v');
+    }
+
+    //FILTER PAGE && LIMIT
+
+    // page=2&limit=10 1-10 page 1, 11-20 page 2, 21-30 page3
+    // query = query.skip(10).limit(10)
+    // query = query.skip((page - 1) * limit).limit(limit)
+
+    const queryPage = req.query.page * 1 || 1;
+    const queryLimit = req.query.limit * 1 || 100;
+    const skip = (queryPage - 1) * queryLimit;
+    if (queryPage) {
+      const numTours = await Tour.countDocuments();
+      console.log(numTours, skip);
+      if (skip >= numTours) throw new Error('This page does not exist');
+      query = query.skip(skip).limit(queryLimit);
+      // console.log(query.query);
+    }
+    // EXECUTE QUERY
+    const tours = await query;
+
+    // const tours = await Tour.find()
+    //   .where('duration')
+    //   .equals(5)
+    //   .where('difficulty')
+    //   .equals('easy');
+    res.set({
+      'X-My-Private-Info': 'jonasid',
+      'X-My-Private-Info2': 'dengzhu-hub',
+    });
+    res.status(200).json({
+      status: 'success', // 响应状态为成功
+      result: tours.length, // 返回旅游信息的数量
+      data: {
+        tours, // 旅游信息
+      },
+      createAt: new Date(), // 创建时间为当前时间
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(404).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
+};
+```
+
+还有一种查询方式
+
+```js
+  // const tours = await Tour.find()
+    //   .where('duration')
+    //   .equals(5)
+    //   .where('difficulty')
+    //   .equals('easy');
+```
+
+重构我们的getAllTours
+
+```js
+class ApiFeature {
+  constructor(query, queryStr) {
+    this.query = query;
+    this.queryStr = queryStr;
+  }
+  filter() {
+    const queryObj = { ...this.queryStr };
+    console.log(queryObj);
+    const excludeQuery = ['page', 'limit', 'sort', 'fields'];
+    excludeQuery.forEach((el) => delete queryObj[el]);
+    console.log(queryObj);
+    // const tours = await Tour.find({});
+    const queryStr = JSON.stringify(queryObj);
+    const replaceQuery = JSON.parse(
+      queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`),
+    );
+    console.log(replaceQuery);
+
+    // BUILD QUERY
+    this.query = this.query.find(replaceQuery);
+    return this;
+  }
+  sort() {
+    const queryKey = this.queryStr.sort;
+    console.log(typeof queryKey);
+    if (queryKey) {
+      const sortBy = queryKey.split(',').join(' ');
+      console.log(sortBy);
+
+      this.query = this.query.sort(sortBy);
+    } else {
+      this.query = this.query.sort('-createdAt');
+    }
+    return this;
+  }
+  limitFields() {
+    const queryKey = this.queryStr.fields;
+    if (queryKey) {
+      const fields = queryKey.split(',').join(' ');
+      console.log(fields);
+
+      this.query = this.query.select(fields);
+    } else {
+      this.query = this.query.select('-__v -createdAt -updatedAt');
+    }
+    return this;
+  }
+  paginate() {
+    const queryPage = this.queryStr.page * 1 || 1;
+    const queryLimit = this.queryStr.limit * 1 || 100;
+    const skip = (queryPage - 1) * queryLimit;
+    if (isNaN(queryPage) || queryPage <= 0) {
+      throw new Error('Invalid page number');
+    }
+
+    // 强制检查 queryLimit 是否为数字，如果不是则使用默认值 100
+    if (isNaN(queryLimit) || queryLimit <= 0) {
+      throw new Error('Invalid limit value');
+    }
+
+    this.query = this.query.skip(skip).limit(queryLimit);
+    // console.log(query.query);
+
+    return this;
+  }
+}
+```
+
+# ES lint
+
+![image-20240322104857346](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240322104857346.png)
+
+![image-20240322132115445](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240322132115445.png)
+
+创建脚本
+
+```json
+ "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
+```
+
+![image-20240322132208610](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240322132208610.png)
+
+找到一处错误，因为我们代码就只有一处 
+
+![image-20240322132235952](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240322132235952.png)
+
+```json
+ "lint:fix": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
+```
+
+我们可以使用--fix修复一些潜在的错误，比如空格 
+
+![image-20240322132347874](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240322132347874.png)
+
+运行后修复成功
+
+![image-20240322132420449](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240322132420449.png)
+
+我们现在启动prettier和eslint冲突的插件
+
+```json
+npm install --save-dev eslint-plugin-prettier eslint-config-prettier
+npm install --save-dev --save-exact prettier
+```
+
+
+
+```json
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "3.2.5"
+  }
+}
+
+```
+
+引入配置
+
+```json
+    "extends": [
+        "airbnb-base",
+        "plugin:prettier/recommended"
+    ],
+```
+
+j也将脚本添加到package.json
+
+```json
+ "format": "prettier src --write --ignore-unknown",
+    "format:check": "prettier src --check --ignore-unknown" 
+```
+
+当然我们也可以配置setting.json
+
+```json
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "[vue]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    }
+}
+
+```
+
+这样也可以起作用 ctrl+s
+
+# husky 学习
+
+[👆](https://typicode.github.io/husky/get-started.html)
+
+```json
+npm install --save-dev husky
+```
+
+```
+npx husky init
+```
+
+![image-20240322153623726](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240322153623726.png)![image-20240322153637624](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240322153637624.png)
+
+* 在我们提交时会执行指定命令
+* ![image-20240322153738855](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240322153738855.png)
+
+我们也可以只更新 git added 内容
+
+![image-20240322163240123](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240322163240123.png)
+
+```json
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint"
+    ],
+         "*": [
+      "prettier src --write --ignore-unknown"
+    ]
+  },
+```
+
+```js
+PS D:\Study\Web\Eslint> git commit -m "test the delete =" --no-verify
+```
+
+绕过husky 提交
+
+
+
+又回到我么你的tour
+
+```js
+  // const tours = await Tour.find()
+    //   .where('duration')
+    //   .equals(5)
+    //   .where('difficulty')
+    //   .equals('easy');
+```
+
+```js
+    const apiFeatures = new ApiFeature(Tour.find(), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+    // EXECUTE QUERY
+    const tours = await apiFeatures.query;
+```
+
+这里我们将操作放到一个utils文件 然后直接导入类，直接使用这样更加方便
+
+![image-20240322180139454](https://jonasforjack.oss-cn-chengdu.aliyuncs.com/jonas/image-20240322180139454.png)

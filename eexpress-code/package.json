@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon server.v2.js"
+    "start": "nodemon server.v2.js",
+    "lint": "eslint . --ext .js,.ts",
+    "format": "prettier . --write --ignore-unknown"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -20,7 +22,8 @@
   "devDependencies": {
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
-    "eslint-plugin-import": "^2.29.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.1.3",

@@ -198,15 +198,7 @@
     "registered": "2020-02-27T04:12:22 -08:00",
     "latitude": 41.223542,
     "longitude": 153.202071,
-    "tags": [
-      "ipsum",
-      "et",
-      "enim",
-      "esse",
-      "aute",
-      "irure",
-      "qui"
-    ],
+    "tags": ["ipsum", "et", "enim", "esse", "aute", "irure", "qui"],
     "friends": [
       {
         "id": 0,
